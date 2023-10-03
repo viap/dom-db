@@ -1,0 +1,16 @@
+# Инструкции взяты здесь
+https://hub.docker.com/_/mongo
+
+#Команды
+- Переименовать volume (создается новый, в него копируется вся информация, удаляется старый)
+docker volume create --name new_volume && docker run --rm -it -v old_volume:/from -v new_volume:/to alpine ash -c 'cd /from ; cp -av . /to' && docker volume rm old_volume
+- Создать дамп базы
+docker exec -i mongodb /usr/bin/mongodump --username root --password example --authenticationDatabase admin --db domData --archive > /Users/mr.blood/Projects/db-archive/domData_03-10-2023
+- Восстановить базу из дампа
+docker exec -i mongodb /usr/bin/mongorestore --username root --password example --authenticationDatabase admin --nsInclude="domData.*" --archive < /Users/mr.blood/Projects/db-archive/domData_03-10-2023
+
+# Запуск
+1. docker-compose up -d
+
+# Остановка
+1. docker-compose down
