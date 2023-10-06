@@ -23,12 +23,12 @@ jobs:
           REMOTE_HOST: ${{secrets.REMOTE_HOST}}
           REMOTE_USER: ${{secrets.REMOTE_USER}}
           TARGET: ${{secrets.REMOTE_TARGET}}
-          EXCLUDE: "/.github/, /.git, /.gitignore"
+          EXCLUDE: "/.github/, /.git/, /.gitignore"
       - name: Remote | Restart container
         uses: fifsky/ssh-action@master
         with:
           command: |
-            docker-compose down && echo "\r\n----\r\n" > test.txt && docker-compose up -d
+            cd ${{secrets.REMOTE_TARGET}} && docker-compose down && echo "\r\n----\r\n" > test.txt && docker-compose up -d
           host: ${{ secrets.REMOTE_HOST }}
           user: ${{secrets.REMOTE_USER}}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
