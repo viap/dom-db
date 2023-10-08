@@ -1,5 +1,10 @@
 name: Deployment
-on: workflow_dispatch
+on: 
+  push:
+    branches: 
+      - master
+    paths-ignore:
+      - '.github/workflows/*'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -28,7 +33,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            cd ${{secrets.REMOTE_TARGET}} && docker-compose down && echo "\r\n----\r\n" > test.txt && docker-compose up -d
+            cd ${{secrets.REMOTE_TARGET}} && docker-compose down && docker-compose up -d
           host: ${{ secrets.REMOTE_HOST }}
           user: ${{secrets.REMOTE_USER}}
           key: ${{ secrets.SSH_PRIVATE_KEY}}

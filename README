@@ -2,12 +2,20 @@
 https://hub.docker.com/_/mongo
 
 #Команды
-- Переименовать volume (создается новый, в него копируется вся информация, удаляется старый)
+- Переименовать volume (создается новый, в него копируется вся информация, удаляется старый):
 docker volume create --name new_volume && docker run --rm -it -v old_volume:/from -v new_volume:/to alpine ash -c 'cd /from ; cp -av . /to' && docker volume rm old_volume
-- Создать дамп базы
+- Создать дамп базы:
 docker exec -i mongodb /usr/bin/mongodump --username root --password example --authenticationDatabase admin --db domData --archive > /Users/mr.blood/Projects/db-archive/domData_03-10-2023
-- Восстановить базу из дампа
+- Восстановить базу из дампа:
 docker exec -i mongodb /usr/bin/mongorestore --username root --password example --authenticationDatabase admin --nsInclude="domData.*" --archive < /Users/mr.blood/Projects/db-archive/domData_03-10-2023
+- Загрузить файлы на удаленный сервер:
+rsync ./ "root@138.68.101.214:/root/projects/dom-db" --rsh "ssh -p 22 -i ~/.ssh/dom_hosting -o StrictHostKeyChecking=no" --recursive --exclude=/.github/ --exclude=/.env -avzr
+- Скопировать файлы в удаленную папку:
+scp ../db-archive/* root@138.68.101.214:/root/projects/db-archive
+
+#UBUNTU 
+- Перезагрузить систему:
+shutdown -r
 
 # Запуск
 1. docker-compose up -d
