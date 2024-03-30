@@ -1,19 +1,30 @@
 # Инструкции взяты здесь
 https://hub.docker.com/_/mongo
 
-#Команды
+# Команды
 - Переименовать volume (создается новый, в него копируется вся информация, удаляется старый):
 docker volume create --name new_volume && docker run --rm -it -v old_volume:/from -v new_volume:/to alpine ash -c 'cd /from ; cp -av . /to' && docker volume rm old_volume
 - Создать дамп базы:
-docker exec -i mongodb /usr/bin/mongodump --username root --password example --authenticationDatabase admin --db domData --archive > /Users/mr.blood/Projects/db-archive/domData_03-10-2023
+docker exec -i mongodb /usr/bin/mongodump --username <USER> --password <PASSWORD> --authenticationDatabase admin --db <DB_NAME> --archive > <ARCHIVE_FILE_PATH>
 - Восстановить базу из дампа:
-docker exec -i mongodb /usr/bin/mongorestore --username root --password example --authenticationDatabase admin --nsInclude="domData.*" --archive < /Users/mr.blood/Projects/db-archive/domData_03-10-2023
+docker exec -i mongodb /usr/bin/mongorestore --username <USER> --password <PASSWORD> --authenticationDatabase admin --nsInclude="<DB_NAME>.*" --archive < <ARCHIVE_FILE_PATH>
+- Востановить базу из дампа с новым названием:
+docker exec -i mongodb /usr/bin/mongorestore --username <USER> --password <PASSWORD> --authenticationDatabase admin --nsFrom="<OLD_NAME>.*" --nsTo="<NEW_NAME>.*" --archive < <ARCHIVE_FILE_PATH>
 - Загрузить файлы на удаленный сервер:
 rsync ./ "root@138.68.101.214:/root/projects/dom-db" --rsh "ssh -p 22 -i ~/.ssh/dom_hosting -o StrictHostKeyChecking=no" --recursive --exclude=/.github/ --exclude=/.env -avzr
 - Скопировать файлы в удаленную папку:
 scp ../db-archive/* root@138.68.101.214:/root/projects/db-archive
 
-#UBUNTU 
+# Команды для cron (crontab)
+1. Открыть файл с командами на редактирование:
+ - crontab -e 
+2. добавить строки в конец файла (создание дампа 2x баз каждый день в 4 часа утра):
+ - 0 4 * * * docker exec -i mongodb /usr/bin/mongodump --username <USER> --password <PASSWORD> --authenticationDatabase admin --db domBot --archive > "~/projects/dom-db-dumps/domBot_$(date +%F)"
+ - 0 4 * * * docker exec -i mongodb /usr/bin/mongodump --username <USER> --password <PASSWORD> --authenticationDatabase admin --db domData --archive > "~/projects/dom-db-dumps/domData_$(date +%F)"
+3. Убедиться что команды добавлены:
+ - crontab -l
+
+# UBUNTU 
 - Перезагрузить систему:
 shutdown -r
 
@@ -22,3 +33,4 @@ shutdown -r
 
 # Остановка
 1. docker-compose down
+
