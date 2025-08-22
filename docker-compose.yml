@@ -15,8 +15,8 @@ services:
     volumes:
       - domDB:/data/db
       - domDBConfig:/data/configdb
-      # Note: The code in the docker-entrypoint-init.d folder is only executed if the database has never been initialized before.
-      # Note: ":ro" mean read-only
+      # Notice: The code in the docker-entrypoint-init.d folder is only executed if the database has never been initialized before.
+      # Notice: ":ro" mean read-only
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   mongo-express:
@@ -34,7 +34,9 @@ services:
 
 volumes:
   domDB:
+    # Notice: Need to save volume on container restart
     external: true
   domDBConfig:
+    # Notice: Need to save volume on container restart
     external: true
     
