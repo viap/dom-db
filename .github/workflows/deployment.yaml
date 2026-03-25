@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - '.github/workflows/*'
       - 'README'
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
