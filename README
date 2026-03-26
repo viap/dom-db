@@ -20,6 +20,12 @@ https://hub.docker.com/_/mongo
 - docker exec -i mongodb /usr/bin/mongodump --username <USER> --password <PASSWORD> --authenticationDatabase admin --db <DB_NAME> --archive > <ARCHIVE_FILE_PATH>
 ## Восстановить базу из дампа:
 - docker exec -i mongodb /usr/bin/mongorestore --username <USER> --password <PASSWORD> --authenticationDatabase admin --nsInclude="<DB_NAME>.*" --archive < <ARCHIVE_FILE_PATH>
+- gunzip -c /root/backups/mongodb/latest.archive.gz | docker exec -i mongodb mongorestore \
+  --username root \
+  --password '<PASSWORD>' \
+  --authenticationDatabase admin \
+  --archive \
+  --gzip
 ## Востановить базу из дампа с новым названием:
 - docker exec -i mongodb /usr/bin/mongorestore --username <USER> --password <PASSWORD> --authenticationDatabase admin --nsFrom="<OLD_NAME>.*" --nsTo="<NEW_NAME>.*" --archive < <ARCHIVE_FILE_PATH>
 ## Загрузить файлы на удаленный сервер:
@@ -42,5 +48,4 @@ https://hub.docker.com/_/mongo
 
 #Перезагрузить систему:
 - shutdown -r
-
 
