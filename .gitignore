@@ -1,2 +1,5 @@
 .env.prod
 .DS_Store
+
+#Docs
+/docs/archive
