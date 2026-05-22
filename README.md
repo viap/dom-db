@@ -2,7 +2,7 @@
 
 `dom-db` provisions the MongoDB stack used by the DOM project. It includes:
 
-- MongoDB 7
+- MongoDB 8.0 (pinned to `mongo:8.0`)
 - `mongo-express` for web-based database access
 - persistent external Docker volumes for database storage
 - one-time database initialization through [mongo-init.js](./mongo-init.js)
@@ -117,6 +117,8 @@ docker exec -i mongodb /usr/bin/mongorestore \
 
 - The init script in `/docker-entrypoint-initdb.d` only runs the first time the MongoDB data directory is initialized.
 - The `domDB` and `domDBConfig` volumes are marked as external in [docker-compose.yml](./docker-compose.yml), so startup will fail if they do not already exist.
+- Never start this stack with a lower MongoDB major version than the one that last wrote to `domDB` (for example, do not run MongoDB 7 against data already upgraded to FCV 8.0).
+- Do not run `docker compose down -v` unless you intentionally want to destroy local database volumes and data.
 - `.env.prod` is intended for deployment and runtime handling. Treat it as an operational reference, not something to reproduce inside the README.
 
 ## Legacy Reference
