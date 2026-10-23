@@ -13,17 +13,18 @@ jobs:
     environment: prod
     steps:
       - name: Get the project code
-        uses: actions/checkout@v3
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Make env file with secrets
-        uses: SpicyPizza/create-envfile@v2.0
+        uses: SpicyPizza/create-envfile@ace6d4f5d7802b600276c23ca417e669f1a06f6f # v2.0
         with:
           envkey_MONGO_INITDB_ROOT_USERNAME: ${{secrets.MONGO_INITDB_ROOT_USERNAME}}
           envkey_MONGO_INITDB_ROOT_PASSWORD: ${{secrets.MONGO_INITDB_ROOT_PASSWORD}}
           envkey_ME_CONFIG_BASICAUTH_USERNAME: ${{secrets.ME_CONFIG_BASICAUTH_USERNAME}}
           envkey_ME_CONFIG_BASICAUTH_PASSWORD: ${{secrets.ME_CONFIG_BASICAUTH_PASSWORD}}
           envkey_MONGO_EXPRESS_OUTPUT_PORT: ${{secrets.MONGO_EXPRESS_OUTPUT_PORT}}
+          fail_on_empty: true
       - name: Deploy to Server
-        uses: easingthemes/ssh-deploy@main
+        uses: easingthemes/ssh-deploy@5d8aeab1a56041e269567e67a08ce00df324a617 # v6.0.1
         with:
           SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
           ARGS: "-avzr -i"
@@ -32,7 +33,7 @@ jobs:
           TARGET: ${{secrets.REMOTE_TARGET}}
           EXCLUDE: "/.github/, /.git/, /.gitignore"
       - name: Remote | Restart container
-        uses: fifsky/ssh-action@master
+        uses: fifsky/ssh-action@58b3c484be9c20cf118fd3b939a6d2cb3c769512 # v0.0.6
         with:
           command: |
             cd ${{secrets.REMOTE_TARGET}} && docker-compose up -d
