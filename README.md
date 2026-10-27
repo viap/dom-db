@@ -115,10 +115,18 @@ docker exec -i mongodb /usr/bin/mongorestore \
 
 ## Automated Backups (production)
 
-Production backups run on the `dom` host from `/root/scripts/mongo_backup.sh`
-(root crontab, daily at 03:15, log in `/var/log/mongo-backup/`). The script is
-not in this repository; a copy of the previous version is
-`/root/scripts/mongo_backup.sh.bak`.
+Production backups run on the `dom` host from
+[scripts/mongo_backup.sh](./scripts/mongo_backup.sh), deployed with this
+repository (root crontab, daily at 03:15, log in `/var/log/mongo-backup/`):
+
+```cron
+15 3 * * * <deploy dir>/scripts/mongo_backup.sh >> /var/log/mongo-backup/cron.log 2>&1
+```
+
+`<deploy dir>` is the compose working directory:
+`docker inspect mongodb --format '{{ index .Config.Labels "com.docker.compose.project.working_dir" }}'`.
+The script holds no credentials: mongodump runs inside the `mongodb` container
+with the root credentials the container already has.
 
 What it does:
 
